@@ -11,8 +11,10 @@ while toggle
     pause(1);
 
     distanceLeft = brick.UltrasonicDist(3);
+    disp(distanceLeft);
     if distanceLeft < 50 %turn right if nearby wall
       disp("Turning right");
+      brick.GyroCalibrate(1);
       startAngle = brick.GyroAngle(1);
       brick.MoveMotor('A', 30);
       brick.MoveMotor('B', -30);
@@ -22,6 +24,7 @@ while toggle
       brick.StopAllMotors('Brake');
     else % if no nearby wall, turn left
       disp("Turning left");
+      brick.GyroCalibrate(1);
       startAngle = brick.GyroAngle(1);
       brick.MoveMotor('A', -30);
       brick.MoveMotor('B', 30);
