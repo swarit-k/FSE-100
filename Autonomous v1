@@ -1,5 +1,4 @@
-% Set up EV3 connection
-% myev3 = legoev3('usb');
+
 lM = motor(brick, A); % Left motor
 rM = motor(brick, B); % Right motor
 sM = motor(brick, D); % Scanning motor for ultrasonic
