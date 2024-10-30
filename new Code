@@ -5,26 +5,31 @@ while toggle
   brick.MoveMotor('A', 43);
   brick.MoveMotor('B', 50);
   if touch
+    disp("Touch sensor pressed");
     brick.StopAllMotors('Brake');
+
     distanceLeft = brick.UltrasonicDist(3);
-    if distanceLeft < 100
+    if distanceLeft < 50
       startAngle = brick.GyroAngle(1);
       brick.MoveMotor('A', 30);
       brick.MoveMotor('B', -30);
-      while brick.GyroAngle(1) - startAngle > 90
+      while abs(brick.GyroAngle(1) - startAngle) < 90
+          % wait to turn
       end
       brick.StopAllMotors('Brake');
     else
       startAngle = brick.GyroAngle(1);
       brick.MoveMotor('A', -30);
       brick.MoveMotor('B', 30);
-      while brick.GyroAngle(1) - startAngle > -90
+      while abs(brick.GyroAngle(1) - startAngle) < 90
+        % wait to turn
       end
       brick.StopAllMotors('Brake');
     end
   end
+  pause(1);
   txt = input(prompt, "s");
-  if txt = "end"
+  if txt == "end"
     toggle = false;
   end  
 end
