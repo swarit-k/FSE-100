@@ -9,6 +9,7 @@ ts = touchSensor(brick, 3); % Touch sensor
 us = sonicSensor(brick, 4); % Ultrasonic sensor
 
 % Parameters
+isMoving = false;
 stopDistance = 60;
 slowDistance = stopDistance + 30;
 fastForwardSpeed = -50;
@@ -54,19 +55,20 @@ function [leftDistance, rightDistance] = getLeftRightDistance(us, sM)
 end
 
 % Function to turn left
-function turnLeft(lM, rM, gyro, useGyro)
+%{
+function turnLeft(lM, rM, gs, useGyro)
     if useGyro
-        startAngle = readRotationAngle(gyro);
-        mA.Speed = turnSpeed;
-        mB.Speed = -turnSpeed;
-        start(mA); start(mB);
+        startAngle = readRotationAngle(gs);
+        lM.Speed = turnSpeed;
+        rM.Speed = -turnSpeed;
+        start(lM); start(rM);
         while readRotationAngle(gyro) - startAngle > turnLeftAngle
             % Keep turning
         end
     else
-        mA.Speed = turnSpeed;
-        mB.Speed = -turnSpeed;
-        start(mA); start(mB);
+        lM.Speed = turnSpeed;
+        rM.Speed = -turnSpeed;
+        start(lM); start(rM);
         pause(1.13); % Use timing if gyro is not used
     end
     stop(mA); stop(mB);
@@ -90,53 +92,53 @@ function turnRight(mA, mB, gyro, useGyro)
     end
     stop(mA); stop(mB);
 end
+}%
 
 % Main logic loop
 isMoving = true;
-mA.Speed = fastForwardSpeed;
-mB.Speed = fastForwardSpeed;
-start(mA); start(mB);
+lM.Speed = fastForwardSpeed;
+rM.Speed = fastForwardSpeed;
+start(lM); start(rM);
 
 while true
     % Check front distance
-    frontDistanceCm = getFrontDistance(uss, ls);
+    frontDistance = getFrontDistance(us);
 
     % End of the maze (based on light sensor threshold)
-    light = readLightIntensity(ls, 'reflected');
-    if light < 5
-        stop(mA); stop(mB);
-        disp("End of Maze");
-        break;
+    if frontDistance < 5
+        stop(lM); stop(rM);
     end
-    
-    % Move slower as it approaches an obstacle
-    while frontDistanceCm > slowDistance
-        frontDistanceCm = getFrontDistance(uss, ls);
+
+% {
+    while frontDistance > slowDistance
+        frontDistance = getFrontDistance(us);
     end
-    mA.Speed = slowForwardSpeed;
-    mB.Speed = slowForwardSpeed;
-    start(mA); start(mB);
+    lM.Speed = slowForwardSpeed;
+    rM.Speed = slowForwardSpeed;
+    start(lM); start(rM);
     
     % Stop if an obstacle is too close
-    while frontDistanceCm > stopDistance
-        frontDistanceCm = getFrontDistance(uss, ls);
+    while frontDistance > stopDistance
+        frontDistance = getFrontDistance(us);
     end
-    stop(mA); stop(mB);
+    
+        stop(lM); stop(rM);
+%}
     
     % Check left and right distances
-    [leftDistanceCm, rightDistanceCm] = getLeftRightDistance(uss, mC);
+    [leftDistance, rightDistance] = getLeftRightDistance(us, sM);
 
     % Choose turning direction
-    if leftDistanceCm > rightDistanceCm
-        turnLeft(mA, mB, gyro, useGyro);
+    if leftDistance > rightDistance
+        turnLeft(rM, lM, gs, useGyro);
     else
-        turnRight(mA, mB, gyro, useGyro);
+        turnRight(lM, rM, gs, useGyro);
     end
     
     % Resume moving forward
-    mA.Speed = fastForwardSpeed;
-    mB.Speed = fastForwardSpeed;
-    start(mA); start(mB);
+    lM.Speed = fastForwardSpeed;
+    rM.Speed = fastForwardSpeed;
+    start(lM); start(rM);
 end 
 
 
