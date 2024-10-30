@@ -1,6 +1,6 @@
 prompt = "Type to stop vehicle";
-txt = input(prompt, "s");
-while txt ~= "end"
+toggle = true;
+while toggle
   touch = brick.TouchPressed(3);
   brick.MoveMotor('A', 43);
   brick.MoveMotor('B', 50);
@@ -24,5 +24,8 @@ while txt ~= "end"
     end
   end
   txt = input(prompt, "s");
+  if txt = "end"
+    toggle = false;
+  end  
 end
 
