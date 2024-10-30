@@ -1,15 +1,14 @@
 % Set up EV3 connection
-myev3 = legoev3('usb');
-mA = motor(myev3, 'A'); % Left motor
-mB = motor(myev3, 'B'); % Right motor
-mC = motor(myev3, 'C'); % Scanning motor for ultrasonic
-uss = sonicSensor(myev3); % Ultrasonic sensor
-gyro = gyroSensor(myev3); % Gyro sensor
-ls = colorSensor(myev3); % Light sensor
-ts = touchSensor(myev3); % Touch sensor
+% myev3 = legoev3('usb');
+lM = motor(brick, A); % Left motor
+rM = motor(brick, B); % Right motor
+sM = motor(brick, D); % Scanning motor for ultrasonic
+gs = gyroSensor(brick, 1); % Gyro sensor
+cs = colorSensor(brick, 2); % Light sensor
+ts = touchSensor(brick, 3); % Touch sensor
+us = sonicSensor(brick, 4); % Ultrasonic sensor
 
 % Parameters
-isMoving = false;
 stopDistance = 60;
 slowDistance = stopDistance + 30;
 fastForwardSpeed = -50;
@@ -19,47 +18,43 @@ turnLeftAngle = -90;
 turnRightAngle = 90;
 useGyro = true;
 
-% Function to display data on LCD (MATLAB does not have direct LCD commands)
-function writeLcd(frontDistanceCm, leftDistanceCm, rightDistanceCm, light)
-    disp("Front Distance (cm): " + frontDistanceCm);
-    disp("Left Distance (cm): " + leftDistanceCm);
-    disp("Right Distance (cm): " + rightDistanceCm);
-    disp("Light Intensity: " + light);
-end
-
 % Function to get front distance
-function frontDistanceCm = getFrontDistance(uss, ls)
-    frontDistanceCm = readDistance(uss) * 100; % Convert meters to cm
-    light = readLightIntensity(ls, 'reflected');
-    if frontDistanceCm > 2550
-        frontDistanceCm = 0;
+function frontDistance = getFrontDistance(us, ls)
+    frontDistance = readDistance(us); % Convert meters to cm
+    %{
+    if frontDistance == 255
+        frontDistance = 0;
     end
-    writeLcd(frontDistanceCm, NaN, NaN, light);
+    %}
 end
 
 % Function to get left and right distances by moving motor C
-function [leftDistanceCm, rightDistanceCm] = getLeftRightDistance(uss, mC)
+function [leftDistance, rightDistance] = getLeftRightDistance(us, sM)
     % Measure left distance
-    start(mC, -50); % Rotate motor C to left position
-    pause(1); % Give it time to rotate
-    leftDistanceCm = readDistance(uss) * 100; % Convert meters to cm
-    if leftDistanceCm > 2550
+    start(sM, -50); % Rotate motor C to left position
+    pause(1);
+    leftDistance = readDistance(us); % Convert meters to cm
+    %{
+    if leftDistanceCm == 255
         leftDistanceCm = 0;
     end
-    stop(mC);
+    %}
+    stop(sM);
     
     % Measure right distance
-    start(mC, 50); % Rotate motor C to right position
-    pause(1); % Give it time to rotate
-    rightDistanceCm = readDistance(uss) * 100; % Convert meters to cm
-    if rightDistanceCm > 2550
+    start(sM, 50); % Rotate motor C to right position
+    pause(1);
+    rightDistanceCm = readDistance(us); % Convert meters to cm
+    %{
+    if rightDistanceCm > 255
         rightDistanceCm = 0;
     end
-    stop(mC);
+    %}
+    stop(sM);
 end
 
 % Function to turn left
-function turnLeft(mA, mB, gyro, useGyro)
+function turnLeft(lM, rM, gyro, useGyro)
     if useGyro
         startAngle = readRotationAngle(gyro);
         mA.Speed = turnSpeed;
