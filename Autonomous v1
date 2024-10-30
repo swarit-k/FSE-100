@@ -36,8 +36,8 @@ function [leftDistance, rightDistance] = getLeftRightDistance(us, sM)
     pause(1);
     leftDistance = readDistance(us); % Convert meters to cm
     %{
-    if leftDistanceCm == 255
-        leftDistanceCm = 0;
+    if leftDistance == 255
+        leftDistance = 0;
     end
     %}
     stop(sM);
@@ -45,10 +45,10 @@ function [leftDistance, rightDistance] = getLeftRightDistance(us, sM)
     % Measure right distance
     start(sM, 50); % Rotate motor C to right position
     pause(1);
-    rightDistanceCm = readDistance(us); % Convert meters to cm
+    rightDistance = readDistance(us); % Convert meters to cm
     %{
-    if rightDistanceCm > 255
-        rightDistanceCm = 0;
+    if rightDistance > 255
+        rightDistance = 0;
     end
     %}
     stop(sM);
