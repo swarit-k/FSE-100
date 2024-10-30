@@ -1,0 +1,28 @@
+prompt = "Type to stop vehicle";
+txt = input(prompt, "s");
+while txt ~= "end"
+  touch = brick.TouchPressed(3);
+  brick.MoveMotor('A', 43);
+  brick.MoveMotor('B', 50);
+  if touch
+    brick.StopAllMotors('Brake');
+    distanceLeft = brick.UltrasonicDist(3);
+    if distanceLeft < 100
+      startAngle = brick.GyroAngle(1);
+      brick.MoveMotor('A', 30);
+      brick.MoveMotor('B', -30);
+      while brick.GyroAngle(1) - startAngle > 90
+      end
+      brick.StopAllMotors('Brake');
+    else
+      startAngle = brick.GyroAngle(1);
+      brick.MoveMotor('A', -30);
+      brick.MoveMotor('B', 30);
+      while brick.GyroAngle(1) - startAngle > -90
+      end
+      brick.StopAllMotors('Brake');
+    end
+  end
+  txt = input(prompt, "s");
+end
+
