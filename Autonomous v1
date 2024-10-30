@@ -62,7 +62,7 @@ function turnLeft(lM, rM, gs, useGyro)
         lM.Speed = turnSpeed;
         rM.Speed = -turnSpeed;
         start(lM); start(rM);
-        while readRotationAngle(gyro) - startAngle > turnLeftAngle
+        while readRotationAngle(gs) - startAngle > turnLeftAngle
             % Keep turning
         end
     else
