@@ -8,6 +8,7 @@ while toggle
   if touch %check if touch sensor is being pressed
     disp("Touch sensor pressed");
     brick.StopAllMotors('Brake');
+    %{
     pause(1);
 
     distanceLeft = brick.UltrasonicDist(3);
@@ -33,6 +34,7 @@ while toggle
       end
       brick.StopAllMotors('Brake');
     end
+    %}
   end
   pause(1);
   txt = input(prompt, "s");
