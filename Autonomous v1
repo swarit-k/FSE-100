@@ -57,40 +57,28 @@ end
 % Function to turn left
 %{
 function turnLeft(lM, rM, gs, useGyro)
-    if useGyro
-        startAngle = readRotationAngle(gs);
-        lM.Speed = turnSpeed;
-        rM.Speed = -turnSpeed;
-        start(lM); start(rM);
-        while readRotationAngle(gs) - startAngle > turnLeftAngle
-            % Keep turning
-        end
-    else
-        lM.Speed = turnSpeed;
-        rM.Speed = -turnSpeed;
-        start(lM); start(rM);
-        pause(1.13); % Use timing if gyro is not used
+    
+    startAngle = readRotationAngle(gs);
+    lM.Speed = turnSpeed;
+    rM.Speed = -turnSpeed;
+    start(lM); start(rM);
+    while readRotationAngle(gs) - startAngle > turnLeftAngle
+        % Keep turning
     end
-    stop(mA); stop(mB);
+    stop(lM); stop(rM);
 end
 
 % Function to turn right
-function turnRight(mA, mB, gyro, useGyro)
-    if useGyro
-        startAngle = readRotationAngle(gyro);
-        mA.Speed = -turnSpeed;
-        mB.Speed = turnSpeed;
-        start(mA); start(mB);
-        while readRotationAngle(gyro) - startAngle < turnRightAngle
-            % Keep turning
-        end
-    else
-        mA.Speed = -turnSpeed;
-        mB.Speed = turnSpeed;
-        start(mA); start(mB);
-        pause(1.18); % Use timing if gyro is not used
+function turnLeft(lM, rM, gs, useGyro)
+    
+    startAngle = readRotationAngle(gs);
+    lM.Speed = -turnSpeed;
+    rM.Speed = turnSpeed;
+    start(lM); start(rM);
+    while readRotationAngle(gs) - startAngle > turnLeftAngle
+        % Keep turning
     end
-    stop(mA); stop(mB);
+    stop(lM); stop(rM);
 end
 }%
 
