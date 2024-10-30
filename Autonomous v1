@@ -1,0 +1,147 @@
+% Set up EV3 connection
+myev3 = legoev3('usb');
+mA = motor(myev3, 'A'); % Left motor
+mB = motor(myev3, 'B'); % Right motor
+mC = motor(myev3, 'C'); % Scanning motor for ultrasonic
+uss = sonicSensor(myev3); % Ultrasonic sensor
+gyro = gyroSensor(myev3); % Gyro sensor
+ls = colorSensor(myev3); % Light sensor
+ts = touchSensor(myev3); % Touch sensor
+
+% Parameters
+isMoving = false;
+stopDistance = 60;
+slowDistance = stopDistance + 30;
+fastForwardSpeed = -50;
+slowForwardSpeed = -20;
+turnSpeed = 30; % Motors in reverse
+turnLeftAngle = -90;
+turnRightAngle = 90;
+useGyro = true;
+
+% Function to display data on LCD (MATLAB does not have direct LCD commands)
+function writeLcd(frontDistanceCm, leftDistanceCm, rightDistanceCm, light)
+    disp("Front Distance (cm): " + frontDistanceCm);
+    disp("Left Distance (cm): " + leftDistanceCm);
+    disp("Right Distance (cm): " + rightDistanceCm);
+    disp("Light Intensity: " + light);
+end
+
+% Function to get front distance
+function frontDistanceCm = getFrontDistance(uss, ls)
+    frontDistanceCm = readDistance(uss) * 100; % Convert meters to cm
+    light = readLightIntensity(ls, 'reflected');
+    if frontDistanceCm > 2550
+        frontDistanceCm = 0;
+    end
+    writeLcd(frontDistanceCm, NaN, NaN, light);
+end
+
+% Function to get left and right distances by moving motor C
+function [leftDistanceCm, rightDistanceCm] = getLeftRightDistance(uss, mC)
+    % Measure left distance
+    start(mC, -50); % Rotate motor C to left position
+    pause(1); % Give it time to rotate
+    leftDistanceCm = readDistance(uss) * 100; % Convert meters to cm
+    if leftDistanceCm > 2550
+        leftDistanceCm = 0;
+    end
+    stop(mC);
+    
+    % Measure right distance
+    start(mC, 50); % Rotate motor C to right position
+    pause(1); % Give it time to rotate
+    rightDistanceCm = readDistance(uss) * 100; % Convert meters to cm
+    if rightDistanceCm > 2550
+        rightDistanceCm = 0;
+    end
+    stop(mC);
+end
+
+% Function to turn left
+function turnLeft(mA, mB, gyro, useGyro)
+    if useGyro
+        startAngle = readRotationAngle(gyro);
+        mA.Speed = turnSpeed;
+        mB.Speed = -turnSpeed;
+        start(mA); start(mB);
+        while readRotationAngle(gyro) - startAngle > turnLeftAngle
+            % Keep turning
+        end
+    else
+        mA.Speed = turnSpeed;
+        mB.Speed = -turnSpeed;
+        start(mA); start(mB);
+        pause(1.13); % Use timing if gyro is not used
+    end
+    stop(mA); stop(mB);
+end
+
+% Function to turn right
+function turnRight(mA, mB, gyro, useGyro)
+    if useGyro
+        startAngle = readRotationAngle(gyro);
+        mA.Speed = -turnSpeed;
+        mB.Speed = turnSpeed;
+        start(mA); start(mB);
+        while readRotationAngle(gyro) - startAngle < turnRightAngle
+            % Keep turning
+        end
+    else
+        mA.Speed = -turnSpeed;
+        mB.Speed = turnSpeed;
+        start(mA); start(mB);
+        pause(1.18); % Use timing if gyro is not used
+    end
+    stop(mA); stop(mB);
+end
+
+% Main logic loop
+isMoving = true;
+mA.Speed = fastForwardSpeed;
+mB.Speed = fastForwardSpeed;
+start(mA); start(mB);
+
+while true
+    % Check front distance
+    frontDistanceCm = getFrontDistance(uss, ls);
+
+    % End of the maze (based on light sensor threshold)
+    light = readLightIntensity(ls, 'reflected');
+    if light < 5
+        stop(mA); stop(mB);
+        disp("End of Maze");
+        break;
+    end
+    
+    % Move slower as it approaches an obstacle
+    while frontDistanceCm > slowDistance
+        frontDistanceCm = getFrontDistance(uss, ls);
+    end
+    mA.Speed = slowForwardSpeed;
+    mB.Speed = slowForwardSpeed;
+    start(mA); start(mB);
+    
+    % Stop if an obstacle is too close
+    while frontDistanceCm > stopDistance
+        frontDistanceCm = getFrontDistance(uss, ls);
+    end
+    stop(mA); stop(mB);
+    
+    % Check left and right distances
+    [leftDistanceCm, rightDistanceCm] = getLeftRightDistance(uss, mC);
+
+    % Choose turning direction
+    if leftDistanceCm > rightDistanceCm
+        turnLeft(mA, mB, gyro, useGyro);
+    else
+        turnRight(mA, mB, gyro, useGyro);
+    end
+    
+    % Resume moving forward
+    mA.Speed = fastForwardSpeed;
+    mB.Speed = fastForwardSpeed;
+    start(mA); start(mB);
+end 
+
+
