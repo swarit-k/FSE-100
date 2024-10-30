@@ -7,6 +7,7 @@ while toggle
   if touch
     disp("Touch sensor pressed");
     brick.StopAllMotors('Brake');
+    pause(1);
 
     distanceLeft = brick.UltrasonicDist(3);
     if distanceLeft < 50
