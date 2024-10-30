@@ -20,7 +20,7 @@ turnRightAngle = 90;
 useGyro = true;
 
 % Function to get front distance
-function frontDistance = getFrontDistance(us, ls)
+function frontDistance = getFrontDistance(us)
     frontDistance = readDistance(us); % Convert meters to cm
     %{
     if frontDistance == 255
