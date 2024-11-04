@@ -1,0 +1,40 @@
+%prompt = "Type to stop vehicle";
+toggle = true;
+while toggle
+  brick.MoveMotor('A', 43);
+  brick.MoveMotor('B', 50);
+  
+  
+  if brick.TouchPressed(3) %check if touch sensor is being pressed
+    disp("Touch sensor pressed");
+    
+    brick.StopAllMotors('Brake');
+    brick.MoveMotor('A', -10);
+    brick.MoveMotor('B', -10);
+    pause(3);
+    brick.StopAllMotors('Brake');
+
+    distanceRight = brick.UltrasonicDist(3);
+    %disp(distanceRight);
+    if brick.UltrasonicDist(3) > 50 %turn right if no nearby wall
+      disp("Turning right");
+      brick.MoveMotorAngleRel('A', -20, 600, 'Brake');
+      brick.MoveMotorAngleRel('B', 20, 600, 'Brake');
+      %brick.WaitForMotor('A');
+      %brick.WaitForMotor('B');
+      pause(7);
+      brick.StopAllMotors();
+    end
+      if distanceRight < 50 % if nearby wall, turn left
+      disp("Turning left");
+      brick.MoveMotorAngleRel('A', 20, 600, 'Brake');
+       brick.MoveMotorAngleRel('B', -20, 600, 'Brake');
+       %brick.WaitForMotor('A');
+       %brick.WaitForMotor('B');
+       pause(7);
+       brick.StopAllMotors();
+      end
+      disp("Done turning");
+  end
+  disp("BIG LOOP");
+end
