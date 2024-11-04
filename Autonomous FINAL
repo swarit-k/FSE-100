@@ -5,7 +5,8 @@ while toggle
   brick.MoveMotor('B', 50);
   
   
-  if brick.TouchPressed(3) %check if touch sensor is being pressed
+    disp(brick.TouchPressed(3));
+  if brick.UltrasonicDist(4) == 1 %check if touch sensor is being pressed
     disp("Touch sensor pressed");
     
     brick.StopAllMotors('Brake');
@@ -13,28 +14,28 @@ while toggle
     brick.MoveMotor('B', -10);
     pause(3);
     brick.StopAllMotors('Brake');
-
-    distanceRight = brick.UltrasonicDist(3);
+    
     %disp(distanceRight);
-    if brick.UltrasonicDist(3) > 50 %turn right if no nearby wall
+    if brick.TouchPressed(3) > 70.00 %turn right if no nearby wall
       disp("Turning right");
-      brick.MoveMotorAngleRel('A', -20, 600, 'Brake');
-      brick.MoveMotorAngleRel('B', 20, 600, 'Brake');
+      disp(brick.TouchPressed(3));
+      brick.MoveMotorAngleRel('A', 20, 635, 'Brake');
+      brick.MoveMotorAngleRel('B', -20, 635, 'Brake');
       %brick.WaitForMotor('A');
       %brick.WaitForMotor('B');
       pause(7);
       brick.StopAllMotors();
-    end
-      if distanceRight < 50 % if nearby wall, turn left
+    else
       disp("Turning left");
-      brick.MoveMotorAngleRel('A', 20, 600, 'Brake');
-       brick.MoveMotorAngleRel('B', -20, 600, 'Brake');
+       disp(brick.TouchPressed(3));
+      brick.MoveMotorAngleRel('A', -20, 635, 'Brake');
+       brick.MoveMotorAngleRel('B', 20, 635, 'Brake');
        %brick.WaitForMotor('A');
        %brick.WaitForMotor('B');
        pause(7);
        brick.StopAllMotors();
-      end
-      disp("Done turning");
+    end
+    disp("Done turning");
   end
-  disp("BIG LOOP");
+  %disp("BIG LOOP");
 end
