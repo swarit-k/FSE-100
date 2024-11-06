@@ -40,11 +40,13 @@ while toggle
   end
   if brick.ColorCode(4) == 5
     brick.StopAllMotors();
+    disp(brick.ColorCode(4));
     pause(1);
     continue;
   end
   if brick.ColorCode(4) == 2
     brick.StopAllMotors();
+    disp(brick.ColorCode(4));
     brick.beep();
     pause(1);
     brick.beep();
@@ -53,6 +55,7 @@ while toggle
   end
   if brick.ColorCode(4) == 3
     brick.StopAllMotors();
+    disp(brick.ColorCode(4));
     brick.beep();
     pause(1);
     brick.beep();
@@ -63,6 +66,7 @@ while toggle
   end
   if brick.ColorCode(4) == 4
     brick.StopAllMotors();
+    disp(brick.ColorCode(4));
     brick.beep();
     pause(1);
     brick.beep();
