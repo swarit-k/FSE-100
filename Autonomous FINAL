@@ -14,28 +14,29 @@ while toggle
     brick.MoveMotor('B', -10);
     pause(3);
     brick.StopAllMotors('Brake');
-    
+  end
     %disp(distanceRight);
-    if brick.TouchPressed(3) > 70.00 %turn right if no nearby wall
-      disp("Turning right");
-      disp(brick.TouchPressed(3));
-      brick.MoveMotorAngleRel('A', 20, 635, 'Brake');
-      brick.MoveMotorAngleRel('B', -20, 635, 'Brake');
-      %brick.WaitForMotor('A');
-      %brick.WaitForMotor('B');
-      pause(7);
-      brick.StopAllMotors();
-    else
-      disp("Turning left");
-       disp(brick.TouchPressed(3));
-      brick.MoveMotorAngleRel('A', -20, 635, 'Brake');
-       brick.MoveMotorAngleRel('B', 20, 635, 'Brake');
-       %brick.WaitForMotor('A');
-       %brick.WaitForMotor('B');
-       pause(7);
-       brick.StopAllMotors();
-    end
+  if brick.TouchPressed(3) > 70.00 %turn right if no nearby wall
+    disp("Turning right");
+    disp(brick.TouchPressed(3));
+    brick.MoveMotorAngleRel('A', 20, 635, 'Brake');
+    brick.MoveMotorAngleRel('B', -20, 635, 'Brake');
+    %brick.WaitForMotor('A');
+    %brick.WaitForMotor('B');
+    pause(7);
+    brick.StopAllMotors();
+    disp("Done turning");
+  else
+    disp("Turning left");
+    disp(brick.TouchPressed(3));
+    brick.MoveMotorAngleRel('A', -20, 635, 'Brake');
+    brick.MoveMotorAngleRel('B', 20, 635, 'Brake');
+    %brick.WaitForMotor('A');
+    %brick.WaitForMotor('B');
+    pause(7);
+    brick.StopAllMotors();
     disp("Done turning");
   end
+  if 
   %disp("BIG LOOP");
 end
