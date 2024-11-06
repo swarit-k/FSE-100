@@ -3,6 +3,7 @@ toggle = true;
 while toggle
   brick.MoveMotor('A', 43);
   brick.MoveMotor('B', 50);
+  brick.setColorMode(4, 2);
   
   
     disp(brick.TouchPressed(3));
@@ -37,6 +38,41 @@ while toggle
     brick.StopAllMotors();
     disp("Done turning");
   end
-  if 
+  if brick.ColorCode(4) == 5
+    brick.StopAllMotors();
+    pause(1);
+    continue;
+  end
+  if brick.ColorCode(4) == 2
+    brick.StopAllMotors();
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    continue;
+  end
+  if brick.ColorCode(4) == 3
+    brick.StopAllMotors();
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    continue;
+  end
+  if brick.ColorCode(4) == 4
+    brick.StopAllMotors();
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    continue;
+  end
+    
   %disp("BIG LOOP");
 end
