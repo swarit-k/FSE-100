@@ -1,0 +1,75 @@
+brick.MoveMotor('C', 43);
+brick.MoveMotor('B', 50);
+brick.SetColorMode(3, 2);
+
+
+while 1 
+color = brick.ColorCode(3);
+disp(color);
+if color == 5
+    brick.StopAllMotors();
+    disp(color);
+    pause(1);
+    while color == 5
+        brick.MoveMotor('C', 43);
+        brick.MoveMotor('B', 50);
+    end
+end
+if color == 3
+    brick.StopAllMotors();
+    disp(color);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    while color == 3
+        brick.MoveMotor('C', 43);
+        brick.MoveMotor('B', 50);
+    end
+end
+
+if color == 2
+    brick.StopAllMotors();
+    disp(color);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    while color == 2
+        brick.MoveMotor('C', 43);
+        brick.MoveMotor('B', 50);
+    end
+ end
+ if color == 3
+    brick.StopAllMotors();
+    disp(color);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    while color == 3
+        brick.MoveMotor('C', 43);
+        brick.MoveMotor('B', 50);
+    end
+  end
+  if color == 4
+    brick.StopAllMotors();
+    disp(color);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    brick.beep();
+    pause(1);
+    while color == 4
+        brick.MoveMotor('C', 43);
+        brick.MoveMotor('B', 50);
+    end
+  end
+end
