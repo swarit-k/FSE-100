@@ -1,0 +1,43 @@
+global key;
+
+InitKeyboard();
+
+while 1
+    pause(0.1);
+
+    switch key
+        case 'uparrow'
+            brick.MoveMotor('D', 75); % Assuming A = left motor
+            brick.MoveMotor('B', 80);
+        
+        case 'downarrow'
+            brick.MoveMotor('D', -80); % Assuming A = left motor
+            brick.MoveMotor('B', -80);
+        
+        case 'leftarrow'
+            brick.MoveMotor('D', -50);
+            brick.MoveMotor('B', 50);
+        
+        case 'rightarrow'
+            brick.MoveMotor('D', 50);
+            brick.MoveMotor('B', -50);
+
+        case '2'
+            brick.MoveMotor('A', -15);
+
+        case '1'
+            brick.MoveMotor('A', 15);
+
+        case 'e'
+            disp('FUCK YOU BITCH');
+            brick.StopAllMotors;
+        
+        case 0
+            brick.StopAllMotors('BRAKE');
+        
+        case 'q'
+            break;
+    end
+end
+
+CloseKeyboard();
